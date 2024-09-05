@@ -1,0 +1,6 @@
+cryptography
+pycryptodome
+scikit-learn
+numpy
+pandas
+scipy
