@@ -36,7 +36,7 @@ Make sure you have the following installed:
 
 3. **Activate the virtual environment:**
 
-    - On Windows: Run the Set-ExecutionPolicy command to to bypass UnauthorizedAccess error on windows
+    - On Windows: Run the Set-ExecutionPolicy command to bypass UnauthorizedAccess error on windows
 
         ```bash
         Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
