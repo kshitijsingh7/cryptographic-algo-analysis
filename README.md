@@ -36,9 +36,10 @@ Make sure you have the following installed:
 
 3. **Activate the virtual environment:**
 
-    - On Windows:
+    - On Windows: Run the Set-ExecutionPolicy command to to bypass UnauthorizedAccess error on windows
 
         ```bash
+        Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
         .\venv\Scripts\activate
         ```
 
