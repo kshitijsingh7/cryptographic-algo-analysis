@@ -57,7 +57,7 @@ Make sure you have the following installed:
     This script generates a dataset containing ciphertexts encrypted with different cryptographic algorithms.
 
     ```bash
-    python generate_dataset.py
+    python generate_crypto_dataset.py
     ```
 
 2. **Check the generated dataset:**
@@ -93,7 +93,7 @@ Make sure you have the following installed:
 - **Generate Dataset**: To create a dataset, run:
 
     ```bash
-    python generate_dataset.py
+    python generate_crypto_dataset.py
     ```
 
 - **Train Model**: To train the model, use:
@@ -110,7 +110,7 @@ Make sure you have the following installed:
 
 ## Explanation of How the Code Works
 
-### 1. Dataset Generation (`generate_dataset.py`)
+### 1. Dataset Generation (`generate_crypto_dataset.py`)
 
 - This script generates ciphertexts using various cryptographic algorithms like AES, DES, 3DES, Blowfish, RC4, Salsa20, CAST5, etc.
 - For each algorithm, a function generates a random key, initializes the cipher, and encrypts a random plaintext.
