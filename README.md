@@ -16,7 +16,7 @@ This project aims to generate datasets for various cryptographic algorithms, tra
 
 Make sure you have the following installed:
 
-- Python 3.7 or above
+- Python 3.10 or above
 - Required Python libraries (listed in `requirements.txt`)
 
 ## Setup and Installation
