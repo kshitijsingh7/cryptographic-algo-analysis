@@ -10,7 +10,8 @@ This project aims to generate datasets for various cryptographic algorithms, tra
 4. [Training the Model](#training-the-model)
 5. [Predicting Algorithm from Ciphertext](#predicting-algorithm-from-ciphertext)
 6. [Usage](#usage)
-7. [Notes](#notes)
+7. [Explanation of How the Code Works](#explanation-of-how-the-code-works)
+8. [Notes](#notes)
 
 ## Prerequisites
 
@@ -106,6 +107,26 @@ Make sure you have the following installed:
     ```bash
     python prediction_csv.py
     ```
+
+## Explanation of How the Code Works
+
+### 1. Dataset Generation (`generate_dataset.py`)
+
+- This script generates ciphertexts using various cryptographic algorithms like AES, DES, 3DES, Blowfish, RC4, Salsa20, CAST5, etc.
+- For each algorithm, a function generates a random key, initializes the cipher, and encrypts a random plaintext.
+- The ciphertexts are stored in a CSV file (`cryptography_dataset.csv`) with their corresponding algorithm labels.
+
+### 2. Feature Extraction and Model Training (`train_model.py`)
+
+- **Feature Extraction**: The script reads the dataset from the CSV file and extracts features from each ciphertext. The features include the length of the ciphertext and its entropy.
+- **Training the Model**: The extracted features are split into training and testing datasets. A RandomForestClassifier is trained using the training data.
+- The trained model and a label encoder (mapping algorithm names to numeric labels) are saved to disk for future use.
+
+### 3. Predicting the Algorithm (`predict_algorithm.py`)
+
+- This script loads the trained model and the label encoder.
+- It reads a CSV file containing ciphertexts, removes any spaces from the ciphertexts, and extracts the same features as used in training (length and entropy).
+- The model predicts which cryptographic algorithm was likely used to generate each ciphertext, and the results are printed on the screen.
 
 ## Notes
 
