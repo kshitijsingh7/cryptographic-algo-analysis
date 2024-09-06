@@ -41,6 +41,8 @@ Make sure you have the following installed:
 
         ```bash
         Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
+        ```
+        ```bash
         .\venv\Scripts\activate
         ```
 
