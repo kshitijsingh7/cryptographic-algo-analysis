@@ -26,7 +26,15 @@ Make sure you have the following installed:
 
     ```bash
     git clone https://github.com/kshitijsingh7/cryptographic-algo-analysis.git
+    ```
+    ```bash
     cd cryptographic-algo-analysis
+    ```
+    ```bash
+    git checkout -b neural-net
+    ```
+    ```bash
+    git pull origin neural-net
     ```
 
 2. **Create a virtual environment:**
