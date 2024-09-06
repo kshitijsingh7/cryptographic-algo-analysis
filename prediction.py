@@ -1,47 +1,93 @@
 import numpy as np
-import joblib  # Use `import joblib` if `sklearn.externals` is deprecated
+import pandas as pd
+import binascii
 from scipy.stats import entropy
-import os
+from sklearn.preprocessing import StandardScaler
+from tensorflow.keras.models import load_model
+import re
 
-# Calculate entropy of data
-def calculate_entropy(data):
-    probability_distribution = np.bincount(data) / len(data)
-    return entropy(probability_distribution, base=2)
+# Function to extract features from ciphertext
+def extract_features(ciphertext):
+    # Remove any whitespace from the ciphertext
+    ciphertext = re.sub(r'\s+', '', ciphertext)
 
-# Extract features from ciphertext
-def extract_features(data):
-    features = []
-    for item in data:
-        item_bytes = np.frombuffer(item, dtype=np.uint8)
-        features.append([len(item_bytes), calculate_entropy(item_bytes)])
-    return np.array(features)
+    # Ensure the ciphertext has an even length
+    if len(ciphertext) % 2 != 0:
+        ciphertext = '0' + ciphertext
 
-# Load the trained model and label encoder
-def load_model_and_encoder(model_filename='model.joblib', encoder_filename='label_encoder.joblib'):
-    model = joblib.load(model_filename)
-    label_encoder = joblib.load(encoder_filename)
-    return model, label_encoder
+    # Convert hex back to bytes
+    ciphertext_bytes = binascii.unhexlify(ciphertext)
 
-# Predict the algorithm for a given ciphertext
-def predict_algorithm(ciphertext, model, label_encoder):
-    features = extract_features([ciphertext])
-    prediction = model.predict(features)
-    # Reverse mapping from numeric label to algorithm name
-    reverse_encoder = {v: k for k, v in label_encoder.items()}
-    return reverse_encoder[prediction[0]]
+    # Byte distribution
+    byte_distribution = np.bincount(np.frombuffer(ciphertext_bytes, dtype=np.uint8), minlength=256)
+
+    # Normalized byte distribution
+    normalized_distribution = byte_distribution / byte_distribution.sum()
+
+    # Entropy
+    entropy_value = entropy(normalized_distribution, base=2)
+
+    # Statistical features
+    mean = np.mean(byte_distribution)
+    std_dev = np.std(byte_distribution)
+    max_value = np.max(byte_distribution)
+    min_value = np.min(byte_distribution)
+
+    # Additional features
+    ciphertext_length = len(ciphertext_bytes)
+    first_byte = ciphertext_bytes[0]
+    last_byte = ciphertext_bytes[-1]
+    unique_bytes = len(set(ciphertext_bytes))
+
+    # Combine all features into a single array
+    features = np.concatenate((
+        normalized_distribution,
+        [entropy_value, mean, std_dev, max_value, min_value,
+         ciphertext_length, first_byte, last_byte, unique_bytes, 0, 0]  # Key and IV length are unknown
+    ))
+
+    return features
+
+
+# Preprocess the input CSV for prediction
+def preprocess_input(input_file):
+    # Load the ciphertext data
+    df = pd.read_csv(input_file)
+
+    # Extract features from ciphertexts
+    features = df['ciphertext'].apply(extract_features).tolist()
+
+    # Convert to numpy array
+    X = np.array(features)
+
+    # Normalize features
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+
+    return X_scaled
+
+
+# Make predictions and save the results
+def predict_and_save(input_file, output_file='predictions.csv'):
+    # Load the trained model and label encoder classes
+    model = load_model('best_model.keras')
+    label_encoder_classes = np.load('label_encoder_classes.npy', allow_pickle=True)
+
+    # Preprocess input data
+    X = preprocess_input(input_file)
+
+    # Predict using the loaded model
+    predictions = model.predict(X)
+    predicted_classes = np.argmax(predictions, axis=1)
+    predicted_labels = label_encoder_classes[predicted_classes]
+
+    # Save predictions to a CSV file
+    df = pd.DataFrame({'ciphertext': pd.read_csv(input_file)['ciphertext'], 'predicted_algorithm': predicted_labels})
+    df.to_csv(output_file, index=False)
+
+    # Print predictions to the terminal
+    print(df)
+
 
 if __name__ == "__main__":
-    # Load the trained model and label encoder
-    model, label_encoder = load_model_and_encoder('model.joblib', 'label_encoder.joblib')
-
-    # Example ciphertexts (replace these with actual ciphertexts you want to test)
-    test_ciphertexts = [
-        os.urandom(64),  # Simulated ciphertext for testing
-        os.urandom(64),  # Simulated ciphertext for testing
-        os.urandom(64)   # Simulated ciphertext for testing
-    ]
-
-    # Predict and display results
-    for i, ciphertext in enumerate(test_ciphertexts):
-        prediction = predict_algorithm(ciphertext, model, label_encoder)
-        print(f"Ciphertext {i+1}: Predicted algorithm - {prediction}")
+    predict_and_save('sample_dataset.csv')
