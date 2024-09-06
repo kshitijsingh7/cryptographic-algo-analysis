@@ -30,6 +30,7 @@ Make sure you have the following installed:
     ```bash
     cd cryptographic-algo-analysis
     ```
+2. **Change Branch:**
     ```bash
     git checkout -b neural-net
     ```
@@ -37,13 +38,13 @@ Make sure you have the following installed:
     git pull origin neural-net
     ```
 
-2. **Create a virtual environment:**
+3. **Create a virtual environment:**
 
     ```bash
     python -m venv venv
     ```
 
-3. **Activate the virtual environment:**
+4. **Activate the virtual environment:**
 
     - On Windows: Run the Set-ExecutionPolicy command to bypass UnauthorizedAccess error on Windows.
 
@@ -54,7 +55,7 @@ Make sure you have the following installed:
         .\venv\Scripts\activate
         ```
 
-4. **Install the required packages:**
+5. **Install the required packages:**
 
     ```bash
     pip install -r requirements.txt
