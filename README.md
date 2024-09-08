@@ -25,10 +25,10 @@ Make sure you have the following installed:
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/kshitijsingh7/cryptographic-algo-analysis.git
+    git clone https://github.com/kshitijsingh7/cryptographic-algorithm-analysis.git
     ```
     ```bash
-    cd cryptographic-algo-analysis
+    cd cryptographic-algorithm-analysis
     ```
 
 2. **Create a virtual environment:**
